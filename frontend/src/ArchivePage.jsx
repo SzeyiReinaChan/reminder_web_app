@@ -1,5 +1,4 @@
 import { useArchiveViewModel } from './ArchiveViewModel';
-import { useNavigate } from 'react-router-dom';
 
 const IPAD_WIDTH = 524;
 const IPAD_HEIGHT = 695;
@@ -14,9 +13,8 @@ const STICKY_COLORS = {
     },
 };
 
-export default function ArchivePage() {
-    const { archive, loading, error } = useArchiveViewModel();
-    const navigate = useNavigate();
+export default function ArchivePage({ userType, userName, onBack }) {
+    const { archive, loading, error } = useArchiveViewModel(userType);
     const now = new Date();
 
     if (loading) return <div className="container mt-5">Loading...</div>;
@@ -36,7 +34,29 @@ export default function ArchivePage() {
             flexDirection: 'column',
             border: '12px solid #222', // Add black border for iPad look
         }}>
-            {/* Header Section (reuse same as dashboard) */}
+            <div className="d-flex align-items-start w-100 pt-4 ps-4">
+                <button
+                    className="d-flex align-items-center justify-content-center"
+                    onClick={onBack}
+                    style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '50%',
+                        background: '#f0f0f0',
+                        border: 'none',
+                        boxShadow: '0 1px 4px #0001',
+                        fontSize: 22,
+                        color: '#222',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s',
+                    }}
+                    onMouseOver={e => (e.currentTarget.style.background = '#e0e0e0')}
+                    onMouseOut={e => (e.currentTarget.style.background = '#f0f0f0')}
+                    aria-label="Back"
+                >
+                    &#8592;
+                </button>
+            </div>
             <div className="px-4 pt-4 pb-2">
                 <div className="d-flex align-items-center" style={{ gap: 16 }}>
                     <div
@@ -61,24 +81,7 @@ export default function ArchivePage() {
                         </span>
                     </div>
                 </div>
-                <button
-                    className="btn fw-bold d-flex align-items-center justify-content-center"
-                    style={{
-                        background: '#1E9300',
-                        color: '#fff',
-                        fontSize: 14,
-                        borderRadius: 8,
-                        padding: '2px 8px',
-                        marginTop: 20,
-                        marginBottom: 0,
-                        minHeight: 28
-                    }}
-                    onClick={() => navigate('/')}
-                >
-                    Back to Dashboard <span className="ms-2" style={{ fontSize: 14, lineHeight: 1 }}>&larr;</span>
-                </button>
             </div>
-            {/* End Header Section */}
             <div
                 style={{
                     flex: 1,
@@ -136,7 +139,7 @@ export default function ArchivePage() {
                                     <button className="btn btn-outline-secondary btn-sm me-2" disabled>
                                         <span role="img" aria-label="audio">🔊</span> Play Audio
                                     </button>
-                                    <button className="btn btn-link btn-sm" disabled>Instructions &rarr;</button>
+                                    {/* <button className="btn btn-link btn-sm" disabled>Instructions &rarr;</button> */}
                                 </div>
                             </div>
                         );

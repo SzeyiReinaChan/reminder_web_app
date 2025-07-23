@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getTasks, getArchive, updateTask, archiveTask } from './api';
 
-export function useDashboardViewModel() {
+export function useDashboardViewModel(userType) {
     const [tasks, setTasks] = useState([]);
     const [archive, setArchive] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -10,12 +10,12 @@ export function useDashboardViewModel() {
     useEffect(() => {
         Promise.all([getTasks(), getArchive()])
             .then(([tasksData, archiveData]) => {
-                setTasks(tasksData);
-                setArchive(archiveData);
+                setTasks(tasksData.filter(t => t.userType === userType));
+                setArchive(archiveData.filter(t => t.userType === userType));
             })
             .catch(() => setError('Failed to fetch tasks'))
             .finally(() => setLoading(false));
-    }, []);
+    }, [userType]);
 
     const handleFinish = async (task) => {
         try {

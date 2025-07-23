@@ -1,7 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import AddStickyPage from './AddStickyPage';
-import ArchivePage from './ArchivePage';
+import DualDashboard from './DualDashboard';
 
 export default function App() {
   return (
@@ -13,11 +10,7 @@ export default function App() {
       justifyContent: 'center',
       background: '#eaeaea',
     }}>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/add" element={<AddStickyPage />} />
-        <Route path="/archive" element={<ArchivePage />} />
-      </Routes>
+      <DualDashboard />
     </div>
   );
 }

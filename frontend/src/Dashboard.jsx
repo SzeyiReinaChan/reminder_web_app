@@ -14,7 +14,7 @@ const STICKY_COLORS = {
     },
 };
 
-export default function Dashboard() {
+export default function Dashboard({ userType, userName, onAdd, onArchive }) {
     const {
         tasks,
         loading,
@@ -22,8 +22,7 @@ export default function Dashboard() {
         handleFinish,
         completed,
         total,
-    } = useDashboardViewModel();
-    const navigate = useNavigate();
+    } = useDashboardViewModel(userType);
     const now = new Date();
 
     if (loading) return <div className="container mt-5">Loading...</div>;
@@ -69,7 +68,7 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="mt-3" style={{ fontSize: 32, fontWeight: 600, lineHeight: 1.3 }}>
-                    Well done, Angela!
+                    Well done, {userName}!
                 </div>
                 <div className="mt-2 mb-2" style={{ fontSize: 20, fontWeight: 500, lineHeight: 0 }}>
                     <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{completed}</span>
@@ -89,7 +88,7 @@ export default function Dashboard() {
                         marginBottom: 0,
                         minHeight: 28
                     }}
-                    onClick={() => navigate('/archive')}
+                    onClick={onArchive}
                 >
                     View Archive <span className="ms-2" style={{ fontSize: 14, lineHeight: 1 }}>&rarr;</span>
                 </button>
@@ -155,16 +154,15 @@ export default function Dashboard() {
                                     <button className="btn btn-outline-secondary btn-sm me-2">
                                         <span role="img" aria-label="audio">🔊</span> Play Audio
                                     </button>
-                                    <button className="btn btn-link btn-sm">Instructions &rarr;</button>
+                                    {/* <button className="btn btn-link btn-sm">Instructions &rarr;</button> */}
                                 </div>
                             </div>
                         );
                     })}
                 </div>
             </div>
-            {/* Floating Add New Stickies Button */}
             <div style={{ position: 'absolute', bottom: -3, right: 20, zIndex: 1000 }}>
-                <button className="btn btn-warning fw-bold shadow" onClick={() => navigate('/add')}>
+                <button className="btn btn-warning fw-bold shadow" onClick={onAdd}>
                     + Add New Stickies
                 </button>
             </div>

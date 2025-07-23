@@ -3,19 +3,17 @@ import { useAddStickyViewModel } from './AddStickyViewModel';
 const IPAD_WIDTH = 524;
 const IPAD_HEIGHT = 695;
 
-export default function AddStickyPage() {
+export default function AddStickyPage({ userType, userName, onBack }) {
     const now = new Date();
     const {
         reminder,
         setReminder,
         frequency,
         setFrequency,
-        userType,
-        setUserType,
         error,
         submitting,
         handleSubmit,
-    } = useAddStickyViewModel();
+    } = useAddStickyViewModel(userType, onBack);
 
     return (
         <div style={{
@@ -35,7 +33,7 @@ export default function AddStickyPage() {
             <div className="d-flex align-items-start w-100 pt-4 ps-4">
                 <button
                     className="d-flex align-items-center justify-content-center"
-                    onClick={() => window.history.back()}
+                    onClick={onBack}
                     style={{
                         width: 40,
                         height: 40,
@@ -92,10 +90,7 @@ export default function AddStickyPage() {
                         </div>
                         <div className="mb-4">
                             <label className="form-label">User Type:</label>
-                            <select className="form-select" value={userType} onChange={e => setUserType(e.target.value)} disabled={submitting}>
-                                <option value="older adult">Older Adult</option>
-                                <option value="caregiver">Caregiver</option>
-                            </select>
+                            <input className="form-control" value={userType} disabled />
                         </div>
                         {error && <div className="text-danger small mb-2">{error}</div>}
                         <button className="btn btn-secondary w-100" type="submit" disabled={submitting}>{submitting ? 'Adding...' : 'Add'}</button>
