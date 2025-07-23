@@ -1,0 +1,41 @@
+{
+  "tasks": [
+    {
+      "id": "1753226784728",
+      "title": "re1 (fr1)",
+      "userType": "older adult",
+      "finished": false,
+      "createdAt": "2025-07-22T23:26:24.728Z"
+    },
+    {
+      "id": "1753226892222",
+      "title": "re2 (fre2)",
+      "userType": "caregiver",
+      "finished": false,
+      "createdAt": "2025-07-22T23:28:12.222Z"
+    }
+  ],
+  "archive": [
+    {
+      "id": "1753118124705",
+      "title": "test",
+      "userType": "caregiver",
+      "finished": true,
+      "createdAt": "2025-07-21T17:15:24.705Z"
+    },
+    {
+      "id": "1753118179218",
+      "title": "New reminder for older adult",
+      "userType": "older adult",
+      "finished": true,
+      "createdAt": "2025-07-21T17:16:19.219Z"
+    },
+    {
+      "id": "1753226063976",
+      "title": "123 (123)",
+      "userType": "older adult",
+      "finished": true,
+      "createdAt": "2025-07-22T23:14:23.976Z"
+    }
+  ]
+}
