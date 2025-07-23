@@ -14,7 +14,7 @@ const STICKY_COLORS = {
     },
 };
 
-export default function Dashboard({ userType, userName, onAdd, onArchive }) {
+export default function Dashboard({ userTypes, userType, userName, onAdd, onArchive }) {
     const {
         tasks,
         loading,
@@ -22,7 +22,7 @@ export default function Dashboard({ userType, userName, onAdd, onArchive }) {
         handleFinish,
         completed,
         total,
-    } = useDashboardViewModel(userType);
+    } = useDashboardViewModel(userTypes);
     const now = new Date();
 
     if (loading) return <div className="container mt-5">Loading...</div>;
@@ -35,7 +35,7 @@ export default function Dashboard({ userType, userName, onAdd, onArchive }) {
             margin: '32px auto',
             background: '#f8f8f8',
             borderRadius: 16,
-            boxShadow: '0 0 100px rgba(0,0,0,0.15)',
+            boxShadow: '0 0 10px rgba(0,0,0,0.15)',
             overflow: 'hidden',
             position: 'relative',
             display: 'flex',
@@ -90,7 +90,7 @@ export default function Dashboard({ userType, userName, onAdd, onArchive }) {
                     }}
                     onClick={onArchive}
                 >
-                    View Archive <span className="ms-2" style={{ fontSize: 14, lineHeight: 1 }}>&rarr;</span>
+                    View Finished <span className="ms-2" style={{ fontSize: 14, lineHeight: 1 }}>&rarr;</span>
                 </button>
             </div>
             {/* End Header Section */}
@@ -149,12 +149,36 @@ export default function Dashboard({ userType, userName, onAdd, onArchive }) {
                                         Finished?
                                     </span>
                                 </div>
-                                <h5 className="fw-bold">{task.title}</h5>
-                                <div className="mt-3">
-                                    <button className="btn btn-outline-secondary btn-sm me-2">
+                                <h5
+                                    className="fw-bold"
+                                    style={{
+                                        padding: '12px 0px',
+                                    }}
+                                >
+                                    {task.title}
+                                </h5>
+                                <div
+                                    className="position-absolute"
+                                    style={{
+                                        bottom: 12,
+                                        left: 12,
+                                        zIndex: 2,
+                                    }}
+                                >
+                                    <button
+                                        className="btn btn-light btn-sm"
+                                        style={{
+                                            background: '#fff',
+                                            color: '#222',
+                                            fontWeight: 600,
+                                            fontSize: 12,
+                                            padding: '3px 8px',
+                                            borderRadius: 50,
+                                            marginBottom: 8,
+                                        }}
+                                    >
                                         <span role="img" aria-label="audio">🔊</span> Play Audio
                                     </button>
-                                    {/* <button className="btn btn-link btn-sm">Instructions &rarr;</button> */}
                                 </div>
                             </div>
                         );

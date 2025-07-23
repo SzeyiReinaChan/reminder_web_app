@@ -13,7 +13,7 @@ const STICKY_COLORS = {
     },
 };
 
-export default function ArchivePage({ userType, userName, onBack }) {
+export default function ArchivePage({ userType, userTypes, userName, onBack }) {
     const { archive, loading, error } = useArchiveViewModel(userType);
     const now = new Date();
 
@@ -135,11 +135,29 @@ export default function ArchivePage({ userType, userName, onBack }) {
                                     </span>
                                 </div>
                                 <h5 className="fw-bold">{task.title}</h5>
-                                <div className="mt-3">
-                                    <button className="btn btn-outline-secondary btn-sm me-2" disabled>
+                                <div
+                                    className="position-absolute"
+                                    style={{
+                                        bottom: 12,
+                                        left: 12,
+                                        zIndex: 2,
+                                    }}
+                                >
+                                    <button
+                                        className="btn btn-light btn-sm"
+                                        style={{
+                                            background: '#fff',
+                                            color: '#222',
+                                            fontWeight: 600,
+                                            fontSize: 12,
+                                            padding: '3px 8px',
+                                            borderRadius: 50,
+                                            marginBottom: 8,
+                                        }}
+                                        disabled
+                                    >
                                         <span role="img" aria-label="audio">🔊</span> Play Audio
                                     </button>
-                                    {/* <button className="btn btn-link btn-sm" disabled>Instructions &rarr;</button> */}
                                 </div>
                             </div>
                         );

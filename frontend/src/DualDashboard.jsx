@@ -4,11 +4,12 @@ import AddStickyPage from './AddStickyPage';
 import ArchivePage from './ArchivePage';
 import { OLDER_ADULT_NAME, CAREGIVER_NAME } from './userNames';
 
-function Panel({ userType, userName, mode, setMode }) {
+function Panel({ userType, userTypes, userName, mode, setMode }) {
     let content;
     if (mode === 'dashboard') {
         content = (
             <Dashboard
+                userTypes={userTypes}
                 userType={userType}
                 userName={userName}
                 onAdd={() => setMode('add')}
@@ -32,9 +33,9 @@ export default function DualDashboard() {
     const [rightMode, setRightMode] = useState('dashboard');
 
     return (
-        <div style={{ display: 'flex', gap: 32, justifyContent: 'center', alignItems: 'flex-start' }}>
-            <Panel userType="older adult" userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
-            <Panel userType="caregiver" userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
+        <div style={{ display: 'flex', gap: 100, justifyContent: 'center', alignItems: 'flex-start' }}>
+            <Panel userType="older adult" userTypes={['older adult', 'caregiver']} userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
+            <Panel userType="caregiver" userTypes={['caregiver']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
         </div>
     );
 } 

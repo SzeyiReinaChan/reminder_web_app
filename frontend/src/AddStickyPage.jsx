@@ -3,7 +3,7 @@ import { useAddStickyViewModel } from './AddStickyViewModel';
 const IPAD_WIDTH = 524;
 const IPAD_HEIGHT = 695;
 
-export default function AddStickyPage({ userType, userName, onBack }) {
+export default function AddStickyPage({ userType, onBack }) {
     const now = new Date();
     const {
         reminder,
@@ -90,7 +90,10 @@ export default function AddStickyPage({ userType, userName, onBack }) {
                         </div>
                         <div className="mb-4">
                             <label className="form-label">User Type:</label>
-                            <input className="form-control" value={userType} disabled />
+                            <select className="form-select" value={userType} onChange={e => setUserType(e.target.value)} disabled={submitting}>
+                                <option value="older adult">Older Adult</option>
+                                <option value="caregiver">Caregiver</option>
+                            </select>
                         </div>
                         {error && <div className="text-danger small mb-2">{error}</div>}
                         <button className="btn btn-secondary w-100" type="submit" disabled={submitting}>{submitting ? 'Adding...' : 'Add'}</button>
