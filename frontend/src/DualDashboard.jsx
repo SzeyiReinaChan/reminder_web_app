@@ -5,6 +5,8 @@ import ArchivePage from './ArchivePage';
 import { OLDER_ADULT_NAME, CAREGIVER_NAME } from './userNames';
 
 function Panel({ userType, userTypes, userName, mode, setMode }) {
+    const [handleUndoneTask, setHandleUndoneTask] = useState(null);
+
     let content;
     if (mode === 'dashboard') {
         content = (
@@ -13,13 +15,16 @@ function Panel({ userType, userTypes, userName, mode, setMode }) {
                 userType={userType}
                 userName={userName}
                 onAdd={() => setMode('add')}
-                onArchive={() => setMode('archive')}
+                onArchive={(handleUndoneTaskFn) => {
+                    setHandleUndoneTask(() => handleUndoneTaskFn);
+                    setMode('archive');
+                }}
             />
         );
     } else if (mode === 'add') {
         content = <AddStickyPage userType={userType} userName={userName} onBack={() => setMode('dashboard')} />;
     } else if (mode === 'archive') {
-        content = <ArchivePage userType={userType} userName={userName} onBack={() => setMode('dashboard')} />;
+        content = <ArchivePage userType={userType} userName={userName} onBack={() => setMode('dashboard')} onUndo={handleUndoneTask} />;
     }
     return (
         <div style={{ position: 'relative', height: 683, minHeight: 683, width: 512 }}>

@@ -13,8 +13,8 @@ const STICKY_COLORS = {
     },
 };
 
-export default function ArchivePage({ userType, userTypes, userName, onBack }) {
-    const { archive, loading, error } = useArchiveViewModel(userType);
+export default function ArchivePage({ userType, userTypes, userName, onBack, onUndo }) {
+    const { archive, loading, error, handleUndo } = useArchiveViewModel(userType, onUndo);
     const now = new Date();
 
     if (loading) return <div className="container mt-5">Loading...</div>;
@@ -128,10 +128,13 @@ export default function ArchivePage({ userType, userTypes, userName, onBack }) {
                                         zIndex: 2,
                                         display: 'flex',
                                         alignItems: 'center',
+                                        cursor: 'pointer',
                                     }}
+                                    onClick={() => handleUndo(task)}
+                                    title="Restore task to active"
                                 >
-                                    <span className="badge bg-dark" style={{ fontSize: 14, padding: '8px 12px', borderRadius: 12 }}>
-                                        Finished
+                                    <span className="badge" style={{ background: '#ff8800', color: '#fff', fontSize: 14, padding: '8px 12px', borderRadius: 12 }}>
+                                        Undo
                                     </span>
                                 </div>
                                 <h5 className="fw-bold">{task.title}</h5>

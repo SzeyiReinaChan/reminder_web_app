@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getArchive } from './api';
+import { getArchive, unarchiveTask } from './api';
 
-export function useArchiveViewModel(userType) {
+export function useArchiveViewModel(userType, onUndo = null) {
     const [archive, setArchive] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,9 +13,29 @@ export function useArchiveViewModel(userType) {
             .finally(() => setLoading(false));
     }, [userType]);
 
+    const handleUndo = async (task) => {
+        // Optimistic UI update - remove from archive
+        setArchive(prev => prev.filter(t => t.id !== task.id));
+
+        // Notify parent component about the undone task
+        if (onUndo) {
+            onUndo({ ...task, finished: false });
+        }
+
+        try {
+            // Move the task from archive back to tasks
+            await unarchiveTask(task.id);
+        } catch (error) {
+            setError('Failed to undo task');
+            // Revert optimistic update
+            setArchive(prev => [...prev, task]);
+        }
+    };
+
     return {
         archive,
         loading,
         error,
+        handleUndo,
     };
 } 

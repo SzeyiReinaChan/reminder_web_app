@@ -20,6 +20,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
         loading,
         error,
         handleFinish,
+        handleUndoneTask,
         completed,
         total,
     } = useDashboardViewModel(userTypes);
@@ -74,7 +75,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                     <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{completed}</span>
                     <span style={{ color: '#222' }}> out of </span>
                     <span style={{ color: '#1E9300', fontWeight: 700 }}>{total}</span>
-                    <span style={{ color: '#222' }}>{` of today’s tasks completed!`}</span>
+                    <span style={{ color: '#222' }}>{` of today's tasks completed!`}</span>
                 </div>
                 <button
                     className="btn fw-bold d-flex align-items-center justify-content-center"
@@ -88,7 +89,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                         marginBottom: 0,
                         minHeight: 28
                     }}
-                    onClick={onArchive}
+                    onClick={() => onArchive(handleUndoneTask)}
                 >
                     View Finished <span className="ms-2" style={{ fontSize: 14, lineHeight: 1 }}>&rarr;</span>
                 </button>

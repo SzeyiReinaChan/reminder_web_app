@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getTasks, getArchive, updateTask, archiveTask } from './api';
 
-export function useDashboardViewModel(userTypes) {
+export function useDashboardViewModel(userTypes, onUndo = null) {
     const [tasks, setTasks] = useState([]);
     const [archive, setArchive] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -40,6 +40,13 @@ export function useDashboardViewModel(userTypes) {
         }
     };
 
+    const handleUndoneTask = useCallback((task) => {
+        // Add the undone task back to active tasks
+        setTasks(prev => [...prev, task]);
+        // Remove from archive if it's there
+        setArchive(prev => prev.filter(t => t.id !== task.id));
+    }, []);
+
     const completed = tasks.filter(t => t.finished).length + archive.filter(t => t.finished).length;
     const total = tasks.length + archive.length;
 
@@ -49,6 +56,7 @@ export function useDashboardViewModel(userTypes) {
         loading,
         error,
         handleFinish,
+        handleUndoneTask,
         completed,
         total,
     };

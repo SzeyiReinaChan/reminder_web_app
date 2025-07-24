@@ -66,6 +66,19 @@ app.post('/archive/:id', (req, res) => {
     res.json(archivedTask);
 });
 
+// Unarchive a task (move from archive back to tasks)
+app.post('/unarchive/:id', (req, res) => {
+    const { id } = req.params;
+    const data = readData();
+    const idx = data.archive.findIndex(t => t.id === id);
+    if (idx === -1) return res.status(404).json({ error: 'Task not found in archive' });
+    const [unarchivedTask] = data.archive.splice(idx, 1);
+    unarchivedTask.finished = false;
+    data.tasks.push(unarchivedTask);
+    writeData(data);
+    res.json(unarchivedTask);
+});
+
 // Get archived tasks
 app.get('/archive', (req, res) => {
     const data = readData();
