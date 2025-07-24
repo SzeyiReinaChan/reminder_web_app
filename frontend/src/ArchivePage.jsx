@@ -14,7 +14,9 @@ const STICKY_COLORS = {
 };
 
 export default function ArchivePage({ userType, userTypes, userName, onBack, onUndo }) {
-    const { archive, loading, error, handleUndo } = useArchiveViewModel(userType, onUndo);
+    // If userTypes is not provided, default to just the userType
+    const types = userTypes || [userType];
+    const { archive, loading, error, handleUndo } = useArchiveViewModel(types, onUndo);
     const now = new Date();
 
     if (loading) return <div className="container mt-5">Loading...</div>;

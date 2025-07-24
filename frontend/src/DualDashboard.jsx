@@ -24,7 +24,9 @@ function Panel({ userType, userTypes, userName, mode, setMode }) {
     } else if (mode === 'add') {
         content = <AddStickyPage userType={userType} userName={userName} onBack={() => setMode('dashboard')} />;
     } else if (mode === 'archive') {
-        content = <ArchivePage userType={userType} userName={userName} onBack={() => setMode('dashboard')} onUndo={handleUndoneTask} />;
+        // For older adult, show both older adult and caregiver finished tasks
+        const archiveUserTypes = userType === 'older adult' ? ['older adult', 'caregiver'] : ['caregiver'];
+        content = <ArchivePage userType={userType} userTypes={archiveUserTypes} userName={userName} onBack={() => setMode('dashboard')} onUndo={handleUndoneTask} />;
     }
     return (
         <div style={{ position: 'relative', height: 683, minHeight: 683, width: 512 }}>

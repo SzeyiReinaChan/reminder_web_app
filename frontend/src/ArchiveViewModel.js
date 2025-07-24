@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import { getArchive, unarchiveTask } from './api';
 
-export function useArchiveViewModel(userType, onUndo = null) {
+export function useArchiveViewModel(userTypes, onUndo = null) {
     const [archive, setArchive] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         getArchive()
-            .then(data => setArchive(data.filter(t => t.userType === userType)))
+            .then(data => {
+                const types = Array.isArray(userTypes) ? userTypes : [userTypes];
+                setArchive(data.filter(t => types.includes(t.userType)));
+            })
             .catch(() => setError('Failed to fetch archive'))
             .finally(() => setLoading(false));
-    }, [userType]);
+    }, [userTypes]);
 
     const handleUndo = async (task) => {
         // Optimistic UI update - remove from archive
