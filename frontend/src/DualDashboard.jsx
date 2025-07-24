@@ -4,7 +4,7 @@ import AddStickyPage from './AddStickyPage';
 import ArchivePage from './ArchivePage';
 import { OLDER_ADULT_NAME, CAREGIVER_NAME } from './userNames';
 
-function Panel({ userType, userTypes, userName, mode, setMode }) {
+function Panel({ userType, userTypes, userName, mode, setMode, label }) {
     const [handleUndoneTask, setHandleUndoneTask] = useState(null);
 
     let content;
@@ -30,6 +30,15 @@ function Panel({ userType, userTypes, userName, mode, setMode }) {
     }
     return (
         <div style={{ position: 'relative', height: 683, minHeight: 683, width: 512 }}>
+            <div style={{
+                position: 'absolute',
+                width: '100%',
+                fontWeight: 700,
+                fontSize: 22,
+                textAlign: 'center',
+                color: '#222',
+                pointerEvents: 'none',
+            }}>{label}</div>
             {content}
         </div>
     );
@@ -41,8 +50,8 @@ export default function DualDashboard() {
 
     return (
         <div style={{ display: 'flex', gap: 100, justifyContent: 'center', alignItems: 'flex-start' }}>
-            <Panel userType="older adult" userTypes={['older adult', 'caregiver']} userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
-            <Panel userType="caregiver" userTypes={['caregiver']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
+            <Panel label="Older Adult Screen" userType="older adult" userTypes={['older adult', 'caregiver']} userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
+            <Panel label="Caregiver Screen" userType="caregiver" userTypes={['caregiver']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
         </div>
     );
 } 

@@ -6,9 +6,10 @@ export default function App() {
       minHeight: '100vh',
       minWidth: '100vw',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'center',
       background: '#eaeaea',
+      paddingTop: 60,
     }}>
       <DualDashboard />
     </div>
