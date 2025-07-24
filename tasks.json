@@ -8,20 +8,6 @@
       "createdAt": "2025-07-23T02:05:32.863Z"
     },
     {
-      "id": "1753118124705",
-      "title": "test",
-      "userType": "caregiver",
-      "finished": false,
-      "createdAt": "2025-07-21T17:15:24.705Z"
-    },
-    {
-      "id": "1753282897503",
-      "title": "New reminder (today)",
-      "userType": "caregiver",
-      "finished": false,
-      "createdAt": "2025-07-23T15:01:37.503Z"
-    },
-    {
       "id": "1753118179218",
       "title": "New reminder for older adult",
       "userType": "older adult",
@@ -41,51 +27,16 @@
       "userType": "caregiver",
       "finished": false,
       "createdAt": "2025-07-23T01:52:58.385Z"
+    },
+    {
+      "id": "1753320497201",
+      "title": "Give me a call (Today)",
+      "userType": "caregiver",
+      "finished": false,
+      "createdAt": "2025-07-24T01:28:17.201Z"
     }
   ],
   "archive": [
-    {
-      "id": "1753282989434",
-      "title": "new reminder test (test)",
-      "userType": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-23T15:03:09.434Z"
-    },
-    {
-      "id": "1753283051250",
-      "title": "new stickies (today)",
-      "userType": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-23T15:04:11.250Z"
-    },
-    {
-      "id": "1753306637811",
-      "title": "test (test)",
-      "userType": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-23T21:37:17.812Z"
-    },
-    {
-      "id": "1753307137382",
-      "title": "test (again)",
-      "userType": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-23T21:45:37.382Z"
-    },
-    {
-      "id": "1753307170753",
-      "title": "test (test)",
-      "userType": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-23T21:46:10.753Z"
-    },
-    {
-      "id": "1753318256731",
-      "title": "test (test)",
-      "userType": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-24T00:50:56.731Z"
-    },
     {
       "id": "1753235193593",
       "title": "walk the dog (once a day)",
@@ -99,20 +50,6 @@
       "userType": "older adult",
       "finished": true,
       "createdAt": "2025-07-23T02:05:08.186Z"
-    },
-    {
-      "id": "1753226784728",
-      "title": "re1 (fr1)",
-      "userType": "older adult",
-      "finished": true,
-      "createdAt": "2025-07-22T23:26:24.728Z"
-    },
-    {
-      "id": "1753226063976",
-      "title": "123 (123)",
-      "userType": "older adult",
-      "finished": true,
-      "createdAt": "2025-07-22T23:14:23.976Z"
     },
     {
       "id": "1753226892222",
