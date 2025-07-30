@@ -1,5 +1,24 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardViewModel } from './DashboardViewModel';
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+    useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const IPAD_WIDTH = 524;
 const IPAD_HEIGHT = 695;
@@ -14,6 +33,94 @@ const STICKY_COLORS = {
     },
 };
 
+// Sortable Sticky Component
+function SortableSticky({ task, handleFinish, userType }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: task.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+    };
+
+    const color = STICKY_COLORS[task.userType] || STICKY_COLORS['older adult'];
+
+    return (
+        <div
+            ref={setNodeRef}
+            {...attributes}
+            {...listeners}
+            className="p-3 rounded shadow position-relative"
+            style={{
+                ...style,
+                width: 190,
+                height: 190,
+                background: color.background,
+                cursor: 'grab',
+            }}
+        >
+            <div
+                className="position-absolute"
+                style={{
+                    top: -18,
+                    right: -8,
+                    zIndex: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                }}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleFinish(task);
+                }}
+                title="Mark as finished and archive"
+            >
+                <span className="badge bg-dark" style={{ fontSize: 14, padding: '8px 12px', borderRadius: 12 }}>
+                    Finished?
+                </span>
+            </div>
+            <h5
+                className="fw-bold"
+                style={{
+                    padding: '12px 0px',
+                }}
+            >
+                {task.title}
+            </h5>
+            <div
+                className="position-absolute"
+                style={{
+                    bottom: 12,
+                    left: 12,
+                    zIndex: 2,
+                }}
+            >
+                <button
+                    className="btn btn-light btn-sm"
+                    style={{
+                        background: '#fff',
+                        color: '#222',
+                        fontWeight: 600,
+                        fontSize: 12,
+                        padding: '3px 8px',
+                        borderRadius: 50,
+                        marginBottom: 8,
+                    }}
+                >
+                    <span role="img" aria-label="audio">🔊</span> Play Audio
+                </button>
+            </div>
+        </div>
+    );
+}
+
 export default function Dashboard({ userTypes, userType, userName, onAdd, onArchive }) {
     const {
         tasks,
@@ -23,8 +130,29 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
         handleUndoneTask,
         completed,
         total,
+        setTasks,
     } = useDashboardViewModel(userTypes);
     const now = new Date();
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over.id) {
+            setTasks((items) => {
+                const oldIndex = items.findIndex((item) => item.id === active.id);
+                const newIndex = items.findIndex((item) => item.id === over.id);
+
+                return arrayMove(items, oldIndex, newIndex);
+            });
+        }
+    };
 
     if (loading) return <div className="container mt-5">Loading...</div>;
     if (error) return <div className="container mt-5 text-danger">{error}</div>;
@@ -109,9 +237,6 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                 <div
                     className="sticky-scroll"
                     style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 1fr)',
-                        gap: '36px 4px',
                         width: 490,
                         paddingTop: 24,
                         maxHeight: 460,
@@ -121,69 +246,32 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                         paddingBottom: 15,
                     }}
                 >
-                    {tasks.map((task) => {
-                        const color = STICKY_COLORS[task.userType] || STICKY_COLORS['older adult'];
-                        return (
-                            <div
-                                key={task.id}
-                                className="p-3 rounded shadow position-relative"
-                                style={{
-                                    width: 190,
-                                    height: 190,
-                                    background: color.background,
-                                }}
-                            >
-                                <div
-                                    className="position-absolute"
-                                    style={{
-                                        top: -18,
-                                        right: -8,
-                                        zIndex: 2,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        cursor: 'pointer',
-                                    }}
-                                    onClick={() => handleFinish(task)}
-                                    title="Mark as finished and archive"
-                                >
-                                    <span className="badge bg-dark" style={{ fontSize: 14, padding: '8px 12px', borderRadius: 12 }}>
-                                        Finished?
-                                    </span>
-                                </div>
-                                <h5
-                                    className="fw-bold"
-                                    style={{
-                                        padding: '12px 0px',
-                                    }}
-                                >
-                                    {task.title}
-                                </h5>
-                                <div
-                                    className="position-absolute"
-                                    style={{
-                                        bottom: 12,
-                                        left: 12,
-                                        zIndex: 2,
-                                    }}
-                                >
-                                    <button
-                                        className="btn btn-light btn-sm"
-                                        style={{
-                                            background: '#fff',
-                                            color: '#222',
-                                            fontWeight: 600,
-                                            fontSize: 12,
-                                            padding: '3px 8px',
-                                            borderRadius: 50,
-                                            marginBottom: 8,
-                                        }}
-                                    >
-                                        <span role="img" aria-label="audio">🔊</span> Play Audio
-                                    </button>
-                                </div>
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={tasks.map(task => task.id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                gap: '36px 2px',
+                                width: '100%',
+                            }}>
+                                {tasks.map((task) => (
+                                    <SortableSticky
+                                        key={task.id}
+                                        task={task}
+                                        handleFinish={handleFinish}
+                                        userType={task.userType}
+                                    />
+                                ))}
                             </div>
-                        );
-                    })}
+                        </SortableContext>
+                    </DndContext>
                 </div>
             </div>
             <div style={{ position: 'absolute', bottom: -3, right: 20, zIndex: 1000 }}>

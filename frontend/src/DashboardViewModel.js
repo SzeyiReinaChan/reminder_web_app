@@ -59,5 +59,6 @@ export function useDashboardViewModel(userTypes, onUndo = null) {
         handleUndoneTask,
         completed,
         total,
+        setTasks,
     };
 } 

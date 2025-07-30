@@ -29,7 +29,7 @@ function Panel({ userType, userTypes, userName, mode, setMode, label }) {
         content = <ArchivePage userType={userType} userTypes={archiveUserTypes} userName={userName} onBack={() => setMode('dashboard')} onUndo={handleUndoneTask} />;
     }
     return (
-        <div style={{ position: 'relative', height: 683, minHeight: 683, width: 512 }}>
+        <div style={{ position: 'relative', height: 683, minHeight: 780, width: 512 }}>
             <div style={{
                 position: 'absolute',
                 width: '100%',
