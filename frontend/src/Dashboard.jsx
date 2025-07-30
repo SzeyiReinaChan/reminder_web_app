@@ -71,14 +71,19 @@ function SortableSticky({ task, handleFinish, userType }) {
                 style={{
                     top: -18,
                     right: -8,
-                    zIndex: 2,
+                    zIndex: 10,
                     display: 'flex',
                     alignItems: 'center',
                     cursor: 'pointer',
                 }}
                 onClick={(e) => {
                     e.stopPropagation();
+                    e.preventDefault();
+                    console.log('Finished button clicked for task:', task.id);
                     handleFinish(task);
+                }}
+                onMouseDown={(e) => {
+                    e.stopPropagation();
                 }}
                 title="Mark as finished and archive"
             >
@@ -135,7 +140,11 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
     const now = new Date();
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })

@@ -81,11 +81,11 @@ export default function AddStickyPage({ userType, onBack }) {
                     <form className="bg-white rounded-4 shadow p-4" style={{ minWidth: 420, minHeight: 300 }} onSubmit={handleSubmit}>
                         <h3 className="fw-bold mb-3">Create Reminder</h3>
                         <div className="mb-3">
-                            <label className="form-label">Reminder me of:</label>
+                            <label className="form-label">What to remind me of:</label>
                             <input className="form-control" value={reminder} onChange={e => setReminder(e.target.value)} disabled={submitting} />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Frequency:</label>
+                            <label className="form-label">When to remind me:</label>
                             <input className="form-control" value={frequency} onChange={e => setFrequency(e.target.value)} disabled={submitting} />
                         </div>
                         <div className="mb-4">

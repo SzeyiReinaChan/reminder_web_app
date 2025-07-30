@@ -47,11 +47,106 @@ function Panel({ userType, userTypes, userName, mode, setMode, label }) {
 export default function DualDashboard() {
     const [leftMode, setLeftMode] = useState('dashboard');
     const [rightMode, setRightMode] = useState('dashboard');
+    const [showOlderAdult, setShowOlderAdult] = useState(true);
+    const [showCaregiver, setShowCaregiver] = useState(true);
 
     return (
-        <div style={{ display: 'flex', gap: 100, justifyContent: 'center', alignItems: 'flex-start' }}>
-            <Panel label="Older Adult Screen" userType="older adult" userTypes={['older adult', 'caregiver']} userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
-            <Panel label="Caregiver Screen" userType="caregiver" userTypes={['caregiver']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+            {/* Switch Controls */}
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 40,
+                padding: '16px 24px',
+                background: '#f8f9fa',
+                borderRadius: '12px',
+                border: '2px solid #dee2e6',
+                marginBottom: 20,
+            }}>
+                {/* Older Adult Switch */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span style={{ fontSize: 16, fontWeight: 600, color: '#495057' }}>
+                        Older Adult Screen
+                    </span>
+                    <div
+                        onClick={() => setShowOlderAdult(!showOlderAdult)}
+                        style={{
+                            width: 60,
+                            height: 32,
+                            background: showOlderAdult ? '#28a745' : '#6c757d',
+                            borderRadius: 16,
+                            position: 'relative',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '2px',
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: 28,
+                                height: 28,
+                                background: 'white',
+                                borderRadius: '50%',
+                                transform: showOlderAdult ? 'translateX(28px)' : 'translateX(0)',
+                                transition: 'transform 0.3s ease',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            }}
+                        />
+                    </div>
+                    <span style={{ fontSize: 14, color: '#6c757d' }}>
+                        {showOlderAdult ? 'ON' : 'OFF'}
+                    </span>
+                </div>
+
+                {/* Caregiver Switch */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span style={{ fontSize: 16, fontWeight: 600, color: '#495057' }}>
+                        Caregiver Screen
+                    </span>
+                    <div
+                        onClick={() => setShowCaregiver(!showCaregiver)}
+                        style={{
+                            width: 60,
+                            height: 32,
+                            background: showCaregiver ? '#28a745' : '#6c757d',
+                            borderRadius: 16,
+                            position: 'relative',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '2px',
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: 28,
+                                height: 28,
+                                background: 'white',
+                                borderRadius: '50%',
+                                transform: showCaregiver ? 'translateX(28px)' : 'translateX(0)',
+                                transition: 'transform 0.3s ease',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            }}
+                        />
+                    </div>
+                    <span style={{ fontSize: 14, color: '#6c757d' }}>
+                        {showCaregiver ? 'ON' : 'OFF'}
+                    </span>
+                </div>
+            </div>
+
+            {/* Panels */}
+            <div style={{ display: 'flex', gap: 100, justifyContent: 'center', alignItems: 'flex-start' }}>
+                {showOlderAdult && (
+                    <Panel label="Older Adult Screen" userType="older adult" userTypes={['older adult', 'caregiver']} userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
+                )}
+                {showCaregiver && (
+                    <Panel label="Caregiver Screen" userType="caregiver" userTypes={['caregiver']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
+                )}
+            </div>
         </div>
     );
 } 
