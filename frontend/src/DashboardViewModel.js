@@ -72,6 +72,19 @@ export function useDashboardViewModel(userTypes, currentUserType = null, onUndo 
     const completed = tasks.filter(t => t.finished).length + archive.filter(t => t.finished).length;
     const total = tasks.length + archive.length;
 
+    // For caregiver screen, calculate separate counts
+    const caregiverOwnTasks = tasks.filter(t => t.createdBy === 'caregiver' && t.userType === 'caregiver');
+    const caregiverOwnCompleted = caregiverOwnTasks.filter(t => t.finished).length +
+        archive.filter(t => t.createdBy === 'caregiver' && t.userType === 'caregiver' && t.finished).length;
+    const caregiverOwnTotal = caregiverOwnTasks.length +
+        archive.filter(t => t.createdBy === 'caregiver' && t.userType === 'caregiver').length;
+
+    const caregiverOlderAdultTasks = tasks.filter(t => t.createdBy === 'caregiver' && t.userType === 'older adult');
+    const caregiverOlderAdultCompleted = caregiverOlderAdultTasks.filter(t => t.finished).length +
+        archive.filter(t => t.createdBy === 'caregiver' && t.userType === 'older adult' && t.finished).length;
+    const caregiverOlderAdultTotal = caregiverOlderAdultTasks.length +
+        archive.filter(t => t.createdBy === 'caregiver' && t.userType === 'older adult').length;
+
     return {
         tasks,
         archive,
@@ -81,6 +94,10 @@ export function useDashboardViewModel(userTypes, currentUserType = null, onUndo 
         handleUndoneTask,
         completed,
         total,
+        caregiverOwnCompleted,
+        caregiverOwnTotal,
+        caregiverOlderAdultCompleted,
+        caregiverOlderAdultTotal,
         setTasks,
     };
 } 

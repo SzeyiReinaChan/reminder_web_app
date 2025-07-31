@@ -49,14 +49,6 @@
       "createdAt": "2025-07-24T01:28:17.201Z"
     },
     {
-      "id": "1753909985317",
-      "title": "something new (everyday)",
-      "userType": "caregiver",
-      "createdBy": "caregiver",
-      "finished": false,
-      "createdAt": "2025-07-30T21:13:05.317Z"
-    },
-    {
       "id": "1753911027533",
       "title": "CVS Shuttle (2pm today)",
       "userType": "older adult",
@@ -87,6 +79,22 @@
       "createdBy": "older adult",
       "finished": false,
       "createdAt": "2025-07-30T21:56:09.921Z"
+    },
+    {
+      "id": "1753925275055",
+      "title": "Pick up med (10am)",
+      "userType": "older adult",
+      "createdBy": "older adult",
+      "finished": false,
+      "createdAt": "2025-07-31T01:27:55.055Z"
+    },
+    {
+      "id": "1753926065230",
+      "title": "try (try)",
+      "userType": "caregiver",
+      "createdBy": "caregiver",
+      "finished": false,
+      "createdAt": "2025-07-31T01:41:05.230Z"
     }
   ],
   "archive": [
@@ -121,6 +129,22 @@
       "createdBy": "older adult",
       "finished": false,
       "createdAt": "2025-07-23T02:05:32.863Z"
+    },
+    {
+      "id": "1753909985317",
+      "title": "something new (everyday)",
+      "userType": "caregiver",
+      "createdBy": "caregiver",
+      "finished": true,
+      "createdAt": "2025-07-30T21:13:05.317Z"
+    },
+    {
+      "id": "1753926079328",
+      "title": "test (test)",
+      "userType": "older adult",
+      "createdBy": "caregiver",
+      "finished": true,
+      "createdAt": "2025-07-31T01:41:19.328Z"
     }
   ]
 }

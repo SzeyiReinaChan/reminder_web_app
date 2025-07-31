@@ -51,7 +51,7 @@ function SortableSticky({ task, handleFinish, userType, currentUserType }) {
     };
 
     // Determine color based on whose screen we're viewing and the reminder context
-    let color;
+    let color = STICKY_COLORS['older adult']; // Default fallback
     if (currentUserType === 'older adult') {
         // On older adult screen
         if (task.createdBy === 'older adult' && task.userType === 'older adult') {
@@ -155,6 +155,10 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
         handleUndoneTask,
         completed,
         total,
+        caregiverOwnCompleted,
+        caregiverOwnTotal,
+        caregiverOlderAdultCompleted,
+        caregiverOlderAdultTotal,
         setTasks,
     } = useDashboardViewModel(userTypes, userType);
     const now = new Date();
@@ -185,6 +189,8 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
 
     if (loading) return <div className="container mt-5">Loading...</div>;
     if (error) return <div className="container mt-5 text-danger">{error}</div>;
+
+    console.log('Dashboard render:', { userType, tasks, completed, total });
 
     return (
         <div style={{
@@ -237,11 +243,30 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                         `Well done, ${userName}!`
                     )}
                 </div>
-                <div className="mt-2 mb-2" style={{ fontSize: 20, fontWeight: 500, lineHeight: 0 }}>
-                    <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{completed}</span>
-                    <span style={{ color: '#222' }}> out of </span>
-                    <span style={{ color: '#1E9300', fontWeight: 700 }}>{total}</span>
-                    <span style={{ color: '#222' }}>{` of today's tasks completed!`}</span>
+                <div className="mt-2 mb-2" style={{ fontSize: 20, fontWeight: 500, lineHeight: userType === 'caregiver' ? 0.5 : 0 }}>
+                    {userType === 'caregiver' ? (
+                        <div>
+                            <div>
+                                <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{caregiverOwnCompleted}</span>
+                                <span style={{ color: '#222' }}> out of </span>
+                                <span style={{ color: '#1E9300', fontWeight: 700 }}>{caregiverOwnTotal}</span>
+                                <span style={{ color: '#222' }}> of my tasks completed!</span>
+                            </div>
+                            <div style={{ marginTop: '8px' }}>
+                                <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{caregiverOlderAdultCompleted}</span>
+                                <span style={{ color: '#222' }}> out of </span>
+                                <span style={{ color: '#1E9300', fontWeight: 700 }}>{caregiverOlderAdultTotal}</span>
+                                <span style={{ color: '#222' }}> of Angela's tasks completed!</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{completed}</span>
+                            <span style={{ color: '#222' }}> out of </span>
+                            <span style={{ color: '#1E9300', fontWeight: 700 }}>{total}</span>
+                            <span style={{ color: '#222' }}>{` of today's tasks completed!`}</span>
+                        </div>
+                    )}
                 </div>
                 <button
                     className="btn fw-bold d-flex align-items-center justify-content-center"
