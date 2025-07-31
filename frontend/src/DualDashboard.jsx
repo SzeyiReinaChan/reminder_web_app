@@ -144,7 +144,7 @@ export default function DualDashboard() {
                     <Panel label="Older Adult Screen" userType="older adult" userTypes={['older adult', 'caregiver']} userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
                 )}
                 {showCaregiver && (
-                    <Panel label="Caregiver Screen" userType="caregiver" userTypes={['caregiver']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
+                    <Panel label="Caregiver Screen" userType="caregiver" userTypes={['caregiver', 'older adult']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
                 )}
             </div>
         </div>

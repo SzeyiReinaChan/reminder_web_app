@@ -27,13 +27,14 @@ app.get('/tasks', (req, res) => {
 
 // Add a new task
 app.post('/tasks', (req, res) => {
-    const { title, userType } = req.body;
+    const { title, userType, createdBy } = req.body;
     if (!title || !userType) return res.status(400).json({ error: 'Missing title or userType' });
     const data = readData();
     const newTask = {
         id: Date.now().toString(),
         title,
-        userType, // 'main' or 'caregiver'
+        userType, // 'older adult' or 'caregiver'
+        createdBy: createdBy || userType, // Who created the reminder
         finished: false,
         createdAt: new Date().toISOString(),
     };

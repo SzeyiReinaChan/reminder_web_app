@@ -10,6 +10,8 @@ export default function AddStickyPage({ userType, onBack }) {
         setReminder,
         frequency,
         setFrequency,
+        userType: selectedUserType,
+        setUserType,
         error,
         submitting,
         handleSubmit,
@@ -88,13 +90,15 @@ export default function AddStickyPage({ userType, onBack }) {
                             <label className="form-label">When to remind me:</label>
                             <input className="form-control" value={frequency} onChange={e => setFrequency(e.target.value)} disabled={submitting} />
                         </div>
-                        <div className="mb-4">
-                            <label className="form-label">User Type:</label>
-                            <select className="form-select" value={userType} onChange={e => setUserType(e.target.value)} disabled={submitting}>
-                                <option value="older adult">Older Adult</option>
-                                <option value="caregiver">Caregiver</option>
-                            </select>
-                        </div>
+                        {userType === 'caregiver' && (
+                            <div className="mb-4">
+                                <label className="form-label">Create reminder for:</label>
+                                <select className="form-select" value={selectedUserType} onChange={e => setUserType(e.target.value)} disabled={submitting}>
+                                    <option value="caregiver">Caregiver (myself)</option>
+                                    <option value="older adult">Older Adult</option>
+                                </select>
+                            </div>
+                        )}
                         {error && <div className="text-danger small mb-2">{error}</div>}
                         <button className="btn btn-secondary w-100" type="submit" disabled={submitting}>{submitting ? 'Adding...' : 'Add'}</button>
                     </form>

@@ -4,6 +4,7 @@ import { addTask } from './api';
 export function useAddStickyViewModel(userType, onSuccess) {
   const [reminder, setReminder] = useState('');
   const [frequency, setFrequency] = useState('');
+  const [selectedUserType, setSelectedUserType] = useState(userType);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -16,7 +17,7 @@ export function useAddStickyViewModel(userType, onSuccess) {
     }
     setSubmitting(true);
     try {
-      await addTask(`${reminder} (${frequency})`, userType);
+      await addTask(`${reminder} (${frequency})`, selectedUserType, userType);
       if (onSuccess) onSuccess();
     } catch (err) {
       setError('Failed to add reminder');
@@ -30,7 +31,8 @@ export function useAddStickyViewModel(userType, onSuccess) {
     setReminder,
     frequency,
     setFrequency,
-    userType,
+    userType: selectedUserType,
+    setUserType: setSelectedUserType,
     error,
     submitting,
     handleSubmit,

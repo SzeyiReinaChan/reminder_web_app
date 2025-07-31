@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getTasks, getArchive, updateTask, archiveTask } from './api';
 
-export function useDashboardViewModel(userTypes, onUndo = null) {
+export function useDashboardViewModel(userTypes, currentUserType = null, onUndo = null) {
     const [tasks, setTasks] = useState([]);
     const [archive, setArchive] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -12,12 +12,34 @@ export function useDashboardViewModel(userTypes, onUndo = null) {
         setLoading(true);
         Promise.all([getTasks(), getArchive()])
             .then(([tasksData, archiveData]) => {
-                setTasks(tasksData.filter(t => types.includes(t.userType)));
-                setArchive(archiveData.filter(t => types.includes(t.userType)));
+                let filteredTasks = tasksData.filter(t => types.includes(t.userType));
+                let filteredArchive = archiveData.filter(t => types.includes(t.userType));
+
+                // Special filtering based on who created the reminder
+                if (currentUserType === 'caregiver') {
+                    // Caregiver screen: show only reminders created by caregiver
+                    filteredTasks = filteredTasks.filter(t => t.createdBy === 'caregiver' || (!t.createdBy && t.userType === 'caregiver'));
+                    filteredArchive = filteredArchive.filter(t => t.createdBy === 'caregiver' || (!t.createdBy && t.userType === 'caregiver'));
+                } else if (currentUserType === 'older adult') {
+                    // Older adult screen: show older adult's own reminders + caregiver's reminders for older adult
+                    filteredTasks = filteredTasks.filter(t =>
+                        t.createdBy === 'older adult' ||
+                        (t.createdBy === 'caregiver' && t.userType === 'older adult') ||
+                        (!t.createdBy && (t.userType === 'older adult' || t.userType === 'caregiver'))
+                    );
+                    filteredArchive = filteredArchive.filter(t =>
+                        t.createdBy === 'older adult' ||
+                        (t.createdBy === 'caregiver' && t.userType === 'older adult') ||
+                        (!t.createdBy && (t.userType === 'older adult' || t.userType === 'caregiver'))
+                    );
+                }
+
+                setTasks(filteredTasks);
+                setArchive(filteredArchive);
             })
             .catch(() => setError('Failed to fetch tasks'))
             .finally(() => setLoading(false));
-    }, [userTypes]);
+    }, [userTypes, currentUserType]);
 
     useEffect(() => {
         fetchData();

@@ -34,7 +34,7 @@ const STICKY_COLORS = {
 };
 
 // Sortable Sticky Component
-function SortableSticky({ task, handleFinish, userType }) {
+function SortableSticky({ task, handleFinish, userType, currentUserType }) {
     const {
         attributes,
         listeners,
@@ -50,7 +50,27 @@ function SortableSticky({ task, handleFinish, userType }) {
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const color = STICKY_COLORS[task.userType] || STICKY_COLORS['older adult'];
+    // Determine color based on whose screen we're viewing and the reminder context
+    let color;
+    if (currentUserType === 'older adult') {
+        // On older adult screen
+        if (task.createdBy === 'older adult' && task.userType === 'older adult') {
+            // My own reminders - yellow
+            color = STICKY_COLORS['older adult'];
+        } else if (task.createdBy === 'caregiver' && task.userType === 'older adult') {
+            // Caregiver's reminders for me - blue
+            color = STICKY_COLORS['caregiver'];
+        }
+    } else if (currentUserType === 'caregiver') {
+        // On caregiver screen
+        if (task.createdBy === 'caregiver' && task.userType === 'caregiver') {
+            // My own reminders - blue
+            color = STICKY_COLORS['caregiver'];
+        } else if (task.createdBy === 'caregiver' && task.userType === 'older adult') {
+            // My reminders for older adult - yellow
+            color = STICKY_COLORS['older adult'];
+        }
+    }
 
     return (
         <div
@@ -136,7 +156,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
         completed,
         total,
         setTasks,
-    } = useDashboardViewModel(userTypes);
+    } = useDashboardViewModel(userTypes, userType);
     const now = new Date();
 
     const sensors = useSensors(
@@ -206,7 +226,16 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                     </div>
                 </div>
                 <div className="mt-3" style={{ fontSize: 32, fontWeight: 600, lineHeight: 1.3 }}>
-                    Well done, {userName}!
+                    {userType === 'caregiver' ? (
+                        (() => {
+                            const hour = now.getHours();
+                            if (hour < 12) return `Good morning, ${userName}!`;
+                            if (hour < 17) return `Good afternoon, ${userName}!`;
+                            return `Good evening, ${userName}!`;
+                        })()
+                    ) : (
+                        `Well done, ${userName}!`
+                    )}
                 </div>
                 <div className="mt-2 mb-2" style={{ fontSize: 20, fontWeight: 500, lineHeight: 0 }}>
                     <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{completed}</span>
@@ -276,6 +305,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                                         task={task}
                                         handleFinish={handleFinish}
                                         userType={task.userType}
+                                        currentUserType={userType}
                                     />
                                 ))}
                             </div>
