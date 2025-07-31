@@ -138,6 +138,14 @@ function SortableSticky({ task, handleFinish, userType, currentUserType }) {
                         borderRadius: 50,
                         marginBottom: 8,
                     }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        const utterance = new SpeechSynthesisUtterance(task.title);
+                        utterance.rate = 0.9; // Slightly slower for clarity
+                        utterance.pitch = 1.0;
+                        utterance.volume = 0.8;
+                        speechSynthesis.speak(utterance);
+                    }}
                 >
                     <span role="img" aria-label="audio">🔊</span> Play Audio
                 </button>

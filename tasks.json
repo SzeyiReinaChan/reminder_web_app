@@ -9,14 +9,6 @@
       "createdAt": "2025-07-23T01:44:10.383Z"
     },
     {
-      "id": "1753377344687",
-      "title": "What to remind of? (When it happen?)",
-      "userType": "older adult",
-      "createdBy": "older adult",
-      "finished": false,
-      "createdAt": "2025-07-24T17:15:44.687Z"
-    },
-    {
       "id": "1753235193593",
       "title": "walk the dog (once a day)",
       "userType": "older adult",
@@ -87,14 +79,6 @@
       "createdBy": "older adult",
       "finished": false,
       "createdAt": "2025-07-31T01:27:55.055Z"
-    },
-    {
-      "id": "1753926065230",
-      "title": "try (try)",
-      "userType": "caregiver",
-      "createdBy": "caregiver",
-      "finished": false,
-      "createdAt": "2025-07-31T01:41:05.230Z"
     }
   ],
   "archive": [
@@ -145,6 +129,22 @@
       "createdBy": "caregiver",
       "finished": true,
       "createdAt": "2025-07-31T01:41:19.328Z"
+    },
+    {
+      "id": "1753377344687",
+      "title": "What to remind of? (When it happen?)",
+      "userType": "older adult",
+      "createdBy": "older adult",
+      "finished": true,
+      "createdAt": "2025-07-24T17:15:44.687Z"
+    },
+    {
+      "id": "1753926065230",
+      "title": "try (try)",
+      "userType": "caregiver",
+      "createdBy": "caregiver",
+      "finished": true,
+      "createdAt": "2025-07-31T01:41:05.230Z"
     }
   ]
 }
