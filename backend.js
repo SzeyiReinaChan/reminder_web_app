@@ -86,6 +86,29 @@ app.get('/archive', (req, res) => {
     res.json(data.archive);
 });
 
+// Delete a task
+app.delete('/tasks/:id', (req, res) => {
+    const { id } = req.params;
+    const data = readData();
+    const idx = data.tasks.findIndex(t => t.id === id);
+    if (idx === -1) return res.status(404).json({ error: 'Task not found' });
+    data.tasks.splice(idx, 1);
+    writeData(data);
+    res.json({ message: 'Task deleted successfully' });
+});
+
+// Update task status (for caregiver-created reminders)
+app.put('/tasks/:id/status', (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    const data = readData();
+    const task = data.tasks.find(t => t.id === id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+    task.status = status; // 'accepted', 'rejected', 'pending'
+    writeData(data);
+    res.json(task);
+});
+
 app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`);
 }); 

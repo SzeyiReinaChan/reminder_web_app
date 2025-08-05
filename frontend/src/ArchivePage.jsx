@@ -111,7 +111,27 @@ export default function ArchivePage({ userType, userTypes, userName, onBack, onU
                     }}
                 >
                     {archive.map((task) => {
-                        const color = STICKY_COLORS[task.userType] || STICKY_COLORS['older adult'];
+                        // Use the same color logic as Dashboard
+                        let color = STICKY_COLORS['older adult']; // Default fallback
+                        if (userType === 'older adult') {
+                            // On older adult screen
+                            if (task.createdBy === 'older adult' && task.userType === 'older adult') {
+                                // My own reminders - yellow
+                                color = STICKY_COLORS['older adult'];
+                            } else if (task.createdBy === 'caregiver' && task.userType === 'older adult') {
+                                // Caregiver's reminders for me - blue
+                                color = STICKY_COLORS['caregiver'];
+                            }
+                        } else if (userType === 'caregiver') {
+                            // On caregiver screen
+                            if (task.createdBy === 'caregiver' && task.userType === 'caregiver') {
+                                // My own reminders - blue
+                                color = STICKY_COLORS['caregiver'];
+                            } else if (task.createdBy === 'caregiver' && task.userType === 'older adult') {
+                                // My reminders for older adult - yellow
+                                color = STICKY_COLORS['older adult'];
+                            }
+                        }
                         return (
                             <div
                                 key={task.id}

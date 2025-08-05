@@ -17,52 +17,12 @@
       "createdAt": "2025-07-23T01:46:33.593Z"
     },
     {
-      "id": "1753236308186",
-      "title": "laundry (once a week)",
-      "userType": "older adult",
-      "createdBy": "older adult",
-      "finished": false,
-      "createdAt": "2025-07-23T02:05:08.186Z"
-    },
-    {
       "id": "1753235578385",
       "title": "get grocery (today)",
       "userType": "caregiver",
       "createdBy": "caregiver",
       "finished": false,
       "createdAt": "2025-07-23T01:52:58.385Z"
-    },
-    {
-      "id": "1753320497201",
-      "title": "Give me a call (Today)",
-      "userType": "caregiver",
-      "createdBy": "caregiver",
-      "finished": false,
-      "createdAt": "2025-07-24T01:28:17.201Z"
-    },
-    {
-      "id": "1753911027533",
-      "title": "CVS Shuttle (2pm today)",
-      "userType": "older adult",
-      "createdBy": "caregiver",
-      "finished": false,
-      "createdAt": "2025-07-30T21:30:27.533Z"
-    },
-    {
-      "id": "1753911861195",
-      "title": "their reminder (today)",
-      "userType": "older adult",
-      "createdBy": "older adult",
-      "finished": false,
-      "createdAt": "2025-07-30T21:44:21.195Z"
-    },
-    {
-      "id": "1753912443662",
-      "title": "Yoga class (2pm)",
-      "userType": "older adult",
-      "createdBy": "older adult",
-      "finished": false,
-      "createdAt": "2025-07-30T21:54:03.662Z"
     },
     {
       "id": "1753912569921",
@@ -73,12 +33,12 @@
       "createdAt": "2025-07-30T21:56:09.921Z"
     },
     {
-      "id": "1753925275055",
-      "title": "Pick up med (10am)",
+      "id": "1754423109675",
+      "title": "test new (test new)",
       "userType": "older adult",
-      "createdBy": "older adult",
+      "createdBy": "caregiver",
       "finished": false,
-      "createdAt": "2025-07-31T01:27:55.055Z"
+      "createdAt": "2025-08-05T19:45:09.675Z"
     }
   ],
   "archive": [
@@ -89,62 +49,6 @@
       "createdBy": "older adult",
       "finished": true,
       "createdAt": "2025-07-21T17:16:19.219Z"
-    },
-    {
-      "id": "1753226892222",
-      "title": "re2 (fre2)",
-      "userType": "caregiver",
-      "createdBy": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-22T23:28:12.222Z"
-    },
-    {
-      "id": "1753377234734",
-      "title": "test (test)",
-      "userType": "caregiver",
-      "createdBy": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-24T17:13:54.734Z"
-    },
-    {
-      "id": "1753236332863",
-      "title": "buy egg (when I got grocery shopping)",
-      "userType": "older adult",
-      "createdBy": "older adult",
-      "finished": false,
-      "createdAt": "2025-07-23T02:05:32.863Z"
-    },
-    {
-      "id": "1753909985317",
-      "title": "something new (everyday)",
-      "userType": "caregiver",
-      "createdBy": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-30T21:13:05.317Z"
-    },
-    {
-      "id": "1753926079328",
-      "title": "test (test)",
-      "userType": "older adult",
-      "createdBy": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-31T01:41:19.328Z"
-    },
-    {
-      "id": "1753377344687",
-      "title": "What to remind of? (When it happen?)",
-      "userType": "older adult",
-      "createdBy": "older adult",
-      "finished": true,
-      "createdAt": "2025-07-24T17:15:44.687Z"
-    },
-    {
-      "id": "1753926065230",
-      "title": "try (try)",
-      "userType": "caregiver",
-      "createdBy": "caregiver",
-      "finished": true,
-      "createdAt": "2025-07-31T01:41:05.230Z"
     }
   ]
 }

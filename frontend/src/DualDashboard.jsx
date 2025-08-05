@@ -2,9 +2,11 @@ import { useState } from 'react';
 import Dashboard from './Dashboard';
 import AddStickyPage from './AddStickyPage';
 import ArchivePage from './ArchivePage';
+import NewReminderPopup from './NewReminderPopup';
 import { OLDER_ADULT_NAME, CAREGIVER_NAME } from './userNames';
+import { updateTaskStatus, deleteTask } from './api';
 
-function Panel({ userType, userTypes, userName, mode, setMode, label }) {
+function Panel({ userType, userTypes, userName, mode, setMode, label, onNewReminder }) {
     const [handleUndoneTask, setHandleUndoneTask] = useState(null);
 
     let content;
@@ -19,6 +21,7 @@ function Panel({ userType, userTypes, userName, mode, setMode, label }) {
                     setHandleUndoneTask(() => handleUndoneTaskFn);
                     setMode('archive');
                 }}
+                onNewReminder={onNewReminder}
             />
         );
     } else if (mode === 'add') {
@@ -49,6 +52,8 @@ export default function DualDashboard() {
     const [rightMode, setRightMode] = useState('dashboard');
     const [showOlderAdult, setShowOlderAdult] = useState(true);
     const [showCaregiver, setShowCaregiver] = useState(true);
+    const [newReminderPopup, setNewReminderPopup] = useState(null);
+    const [newReminderTaskId, setNewReminderTaskId] = useState(null);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
@@ -141,12 +146,64 @@ export default function DualDashboard() {
             {/* Panels */}
             <div style={{ display: 'flex', gap: 100, justifyContent: 'center', alignItems: 'flex-start' }}>
                 {showOlderAdult && (
-                    <Panel label="Older Adult Screen" userType="older adult" userTypes={['older adult', 'caregiver']} userName={OLDER_ADULT_NAME} mode={leftMode} setMode={setLeftMode} />
+                    <Panel
+                        label="Older Adult Screen"
+                        userType="older adult"
+                        userTypes={['older adult', 'caregiver']}
+                        userName={OLDER_ADULT_NAME}
+                        mode={leftMode}
+                        setMode={setLeftMode}
+                        onNewReminder={(reminder, taskId) => {
+                            setNewReminderPopup(reminder);
+                            setNewReminderTaskId(taskId);
+                        }}
+                    />
                 )}
                 {showCaregiver && (
-                    <Panel label="Caregiver Screen" userType="caregiver" userTypes={['caregiver', 'older adult']} userName={CAREGIVER_NAME} mode={rightMode} setMode={setRightMode} />
+                    <Panel
+                        label="Caregiver Screen"
+                        userType="caregiver"
+                        userTypes={['caregiver', 'older adult']}
+                        userName={CAREGIVER_NAME}
+                        mode={rightMode}
+                        setMode={setRightMode}
+                        onNewReminder={null}
+                    />
                 )}
             </div>
+
+            {/* New Reminder Popup */}
+            {newReminderPopup && (
+                <NewReminderPopup
+                    reminder={newReminderPopup}
+                    onAccept={async () => {
+                        // Update the task status to 'accepted'
+                        if (newReminderTaskId) {
+                            try {
+                                await updateTaskStatus(newReminderTaskId, 'accepted');
+                                console.log('Task accepted:', newReminderTaskId);
+                            } catch (error) {
+                                console.error('Failed to accept task:', error);
+                            }
+                        }
+                        setNewReminderPopup(null);
+                        setNewReminderTaskId(null);
+                    }}
+                    onDecline={async () => {
+                        // Update the task status to 'rejected' instead of deleting
+                        if (newReminderTaskId) {
+                            try {
+                                await updateTaskStatus(newReminderTaskId, 'rejected');
+                                console.log('Task rejected:', newReminderTaskId);
+                            } catch (error) {
+                                console.error('Failed to reject task:', error);
+                            }
+                        }
+                        setNewReminderPopup(null);
+                        setNewReminderTaskId(null);
+                    }}
+                />
+            )}
         </div>
     );
 } 

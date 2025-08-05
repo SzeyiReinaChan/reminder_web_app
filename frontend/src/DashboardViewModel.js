@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getTasks, getArchive, updateTask, archiveTask } from './api';
 
-export function useDashboardViewModel(userTypes, currentUserType = null, onUndo = null) {
+export function useDashboardViewModel(userTypes, currentUserType = null, onUndo = null, onNewReminder = null) {
     const [tasks, setTasks] = useState([]);
     const [archive, setArchive] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,21 +21,48 @@ export function useDashboardViewModel(userTypes, currentUserType = null, onUndo 
                     filteredTasks = filteredTasks.filter(t => t.createdBy === 'caregiver' || (!t.createdBy && t.userType === 'caregiver'));
                     filteredArchive = filteredArchive.filter(t => t.createdBy === 'caregiver' || (!t.createdBy && t.userType === 'caregiver'));
                 } else if (currentUserType === 'older adult') {
-                    // Older adult screen: show older adult's own reminders + caregiver's reminders for older adult
+                    // Older adult screen: show older adult's own reminders + caregiver's accepted/pending reminders for older adult
                     filteredTasks = filteredTasks.filter(t =>
                         t.createdBy === 'older adult' ||
-                        (t.createdBy === 'caregiver' && t.userType === 'older adult') ||
+                        (t.createdBy === 'caregiver' && t.userType === 'older adult' && t.status !== 'rejected') ||
                         (!t.createdBy && (t.userType === 'older adult' || t.userType === 'caregiver'))
                     );
                     filteredArchive = filteredArchive.filter(t =>
                         t.createdBy === 'older adult' ||
-                        (t.createdBy === 'caregiver' && t.userType === 'older adult') ||
+                        (t.createdBy === 'caregiver' && t.userType === 'older adult' && t.status !== 'rejected') ||
                         (!t.createdBy && (t.userType === 'older adult' || t.userType === 'caregiver'))
                     );
                 }
 
                 setTasks(filteredTasks);
                 setArchive(filteredArchive);
+
+                // Check for new caregiver reminders for older adult (only on older adult screen)
+                if (currentUserType === 'older adult' && onNewReminder) {
+                    const newCaregiverReminders = filteredTasks.filter(task =>
+                        task.createdBy === 'caregiver' &&
+                        task.userType === 'older adult' &&
+                        (!task.status || task.status === 'pending')
+                    );
+
+                    // Check if any of these reminders were created recently (within 60 seconds)
+                    const now = new Date();
+                    const recentReminders = newCaregiverReminders.filter(task => {
+                        const taskCreated = new Date(task.createdAt);
+                        const timeDiff = (now - taskCreated) / 1000; // seconds
+                        return timeDiff <= 60; // Within 60 seconds
+                    });
+
+                    if (recentReminders.length > 0) {
+                        // Show popup for the most recent reminder
+                        const mostRecent = recentReminders.sort((a, b) =>
+                            new Date(b.createdAt) - new Date(a.createdAt)
+                        )[0];
+
+                        console.log('New caregiver reminder detected:', mostRecent);
+                        onNewReminder(mostRecent.title, mostRecent.id);
+                    }
+                }
             })
             .catch(() => setError('Failed to fetch tasks'))
             .finally(() => setLoading(false));

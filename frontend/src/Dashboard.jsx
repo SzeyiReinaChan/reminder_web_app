@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardViewModel } from './DashboardViewModel';
+import { updateTaskStatus, deleteTask } from './api';
 import {
     DndContext,
     closestCenter,
@@ -34,7 +35,7 @@ const STICKY_COLORS = {
 };
 
 // Sortable Sticky Component
-function SortableSticky({ task, handleFinish, userType, currentUserType }) {
+function SortableSticky({ task, handleFinish, userType, currentUserType, onStatusUpdate }) {
     const {
         attributes,
         listeners,
@@ -72,6 +73,41 @@ function SortableSticky({ task, handleFinish, userType, currentUserType }) {
         }
     }
 
+    // Check if this is a caregiver-created reminder for older adult
+    const isCaregiverReminderForOlderAdult = task.createdBy === 'caregiver' && task.userType === 'older adult';
+
+    // Only show status on caregiver screen for their reminders to older adult
+    const shouldShowStatus = currentUserType === 'caregiver' && isCaregiverReminderForOlderAdult;
+
+    // Get status display
+    const getStatusDisplay = () => {
+        if (!shouldShowStatus) return null;
+
+        const status = task.status || 'pending';
+        const statusConfig = {
+            'pending': { text: 'Pending', color: '#ffc107', bgColor: '#fff3cd' },
+            'accepted': { text: 'Accepted', color: '#198754', bgColor: '#d1e7dd' },
+            'rejected': { text: 'Rejected', color: '#dc3545', bgColor: '#f8d7da' },
+            'edited': { text: 'Edited', color: '#0d6efd', bgColor: '#cfe2ff' }
+        };
+
+        return statusConfig[status] || statusConfig['pending'];
+    };
+
+    // Handle remove rejected reminder
+    const handleRemoveRejected = async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+            await deleteTask(task.id);
+            console.log('Rejected task removed:', task.id);
+            // Immediately remove the task from local state for instant UI update
+            onStatusUpdate(task.id, 'removed');
+        } catch (error) {
+            console.error('Failed to remove rejected task:', error);
+        }
+    };
+
     return (
         <div
             ref={setNodeRef}
@@ -96,20 +132,53 @@ function SortableSticky({ task, handleFinish, userType, currentUserType }) {
                     alignItems: 'center',
                     cursor: 'pointer',
                 }}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    console.log('Finished button clicked for task:', task.id);
-                    handleFinish(task);
-                }}
-                onMouseDown={(e) => {
-                    e.stopPropagation();
-                }}
-                title="Mark as finished and archive"
             >
-                <span className="badge bg-dark" style={{ fontSize: 14, padding: '8px 12px', borderRadius: 12 }}>
-                    Finished?
-                </span>
+                {shouldShowStatus ? (
+                    // Show status for caregiver-created reminders for older adult (only on caregiver screen)
+                    <span className="badge" style={{
+                        fontSize: 10,
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        background: getStatusDisplay()?.bgColor || '#fff3cd',
+                        color: getStatusDisplay()?.color || '#ffc107',
+                        fontWeight: 'bold',
+                        border: `1px solid ${getStatusDisplay()?.color || '#ffc107'}`,
+                        minWidth: '60px',
+                        textAlign: 'center'
+                    }}>
+                        {getStatusDisplay()?.text || 'Pending'}
+                    </span>
+                ) : (
+                    // Show checkmark for regular tasks
+                    <span
+                        className="badge"
+                        style={{
+                            fontSize: 16,
+                            padding: '8px 12px',
+                            borderRadius: '50%',
+                            background: '#6c757d',
+                            color: 'white',
+                            width: '32px',
+                            height: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer'
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            console.log('Finished button clicked for task:', task.id);
+                            handleFinish(task);
+                        }}
+                        onMouseDown={(e) => {
+                            e.stopPropagation();
+                        }}
+                        title="Mark as finished and archive"
+                    >
+                        ✓
+                    </span>
+                )}
             </div>
             <h5
                 className="fw-bold"
@@ -127,34 +196,50 @@ function SortableSticky({ task, handleFinish, userType, currentUserType }) {
                     zIndex: 2,
                 }}
             >
-                <button
-                    className="btn btn-light btn-sm"
-                    style={{
-                        background: '#fff',
-                        color: '#222',
-                        fontWeight: 600,
-                        fontSize: 12,
-                        padding: '3px 8px',
-                        borderRadius: 50,
-                        marginBottom: 8,
-                    }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        const utterance = new SpeechSynthesisUtterance(task.title);
-                        utterance.rate = 0.9; // Slightly slower for clarity
-                        utterance.pitch = 1.0;
-                        utterance.volume = 0.8;
-                        speechSynthesis.speak(utterance);
-                    }}
-                >
-                    <span role="img" aria-label="audio">🔊</span> Play Audio
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <button
+                        className="btn btn-light btn-sm"
+                        style={{
+                            background: '#fff',
+                            color: '#222',
+                            fontWeight: 600,
+                            fontSize: 12,
+                            padding: '3px 8px',
+                            borderRadius: 50,
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            const utterance = new SpeechSynthesisUtterance(task.title);
+                            utterance.rate = 0.9; // Slightly slower for clarity
+                            utterance.pitch = 1.0;
+                            utterance.volume = 0.8;
+                            speechSynthesis.speak(utterance);
+                        }}
+                    >
+                        <span role="img" aria-label="audio">🔊</span> Play Audio
+                    </button>
+                    {shouldShowStatus && task.status === 'rejected' && (
+                        <button
+                            className="btn btn-danger btn-sm"
+                            style={{
+                                fontWeight: 600,
+                                fontSize: 10,
+                                padding: '2px 6px',
+                                borderRadius: 50,
+                            }}
+                            onClick={handleRemoveRejected}
+                            title="Remove rejected reminder"
+                        >
+                            Remove
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );
 }
 
-export default function Dashboard({ userTypes, userType, userName, onAdd, onArchive }) {
+export default function Dashboard({ userTypes, userType, userName, onAdd, onArchive, onNewReminder }) {
     const {
         tasks,
         loading,
@@ -168,7 +253,28 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
         caregiverOlderAdultCompleted,
         caregiverOlderAdultTotal,
         setTasks,
-    } = useDashboardViewModel(userTypes, userType);
+    } = useDashboardViewModel(userTypes, userType, null, onNewReminder);
+
+    const handleStatusUpdate = async (taskId, newStatus) => {
+        try {
+            if (newStatus === 'removed') {
+                // Remove the task from local state immediately
+                setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+            } else {
+                await updateTaskStatus(taskId, newStatus);
+                // Update the task in local state
+                setTasks(prevTasks =>
+                    prevTasks.map(task =>
+                        task.id === taskId
+                            ? { ...task, status: newStatus }
+                            : task
+                    )
+                );
+            }
+        } catch (error) {
+            console.error('Failed to update task status:', error);
+        }
+    };
     const now = new Date();
 
     const sensors = useSensors(
@@ -276,22 +382,41 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                         </div>
                     )}
                 </div>
-                <button
-                    className="btn fw-bold d-flex align-items-center justify-content-center"
-                    style={{
-                        background: '#1E9300',
-                        color: '#fff',
-                        fontSize: 14,
-                        borderRadius: 8,
-                        padding: '2px 8px',
-                        marginTop: 20,
-                        marginBottom: 0,
-                        minHeight: 28
-                    }}
-                    onClick={() => onArchive(handleUndoneTask)}
-                >
-                    View Finished <span className="ms-2" style={{ fontSize: 14, lineHeight: 1 }}>&rarr;</span>
-                </button>
+                <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+                    <button
+                        className="btn fw-bold d-flex align-items-center justify-content-center"
+                        style={{
+                            background: '#1E9300',
+                            color: '#fff',
+                            fontSize: 14,
+                            borderRadius: 8,
+                            padding: '2px 8px',
+                            marginBottom: 0,
+                            minHeight: 28
+                        }}
+                        onClick={() => onArchive(handleUndoneTask)}
+                    >
+                        View Finished <span className="ms-2" style={{ fontSize: 14, lineHeight: 1 }}>&rarr;</span>
+                    </button>
+
+                    {userType === 'older adult' && onNewReminder && (
+                        <button
+                            className="btn fw-bold d-flex align-items-center justify-content-center"
+                            style={{
+                                background: '#007bff',
+                                color: '#fff',
+                                fontSize: 12,
+                                borderRadius: 8,
+                                padding: '2px 8px',
+                                marginBottom: 0,
+                                minHeight: 28
+                            }}
+                            onClick={() => onNewReminder('Test reminder from caregiver', 'test-id')}
+                        >
+                            Test Popup
+                        </button>
+                    )}
+                </div>
             </div>
             {/* End Header Section */}
             <div
@@ -339,6 +464,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                                         handleFinish={handleFinish}
                                         userType={task.userType}
                                         currentUserType={userType}
+                                        onStatusUpdate={handleStatusUpdate}
                                     />
                                 ))}
                             </div>
