@@ -6,7 +6,7 @@ import NewReminderPopup from './NewReminderPopup';
 import { OLDER_ADULT_NAME, CAREGIVER_NAME } from './userNames';
 import { updateTaskStatus, deleteTask } from './api';
 
-function Panel({ userType, userTypes, userName, mode, setMode, label, onNewReminder }) {
+function Panel({ userType, userTypes, userName, olderAdultName, mode, setMode, label, onNewReminder }) {
     const [handleUndoneTask, setHandleUndoneTask] = useState(null);
 
     let content;
@@ -16,6 +16,7 @@ function Panel({ userType, userTypes, userName, mode, setMode, label, onNewRemin
                 userTypes={userTypes}
                 userType={userType}
                 userName={userName}
+                olderAdultName={olderAdultName}
                 onAdd={() => setMode('add')}
                 onArchive={(handleUndoneTaskFn) => {
                     setHandleUndoneTask(() => handleUndoneTaskFn);
@@ -151,6 +152,7 @@ export default function DualDashboard() {
                         userType="older adult"
                         userTypes={['older adult', 'caregiver']}
                         userName={OLDER_ADULT_NAME}
+                        olderAdultName={OLDER_ADULT_NAME}
                         mode={leftMode}
                         setMode={setLeftMode}
                         onNewReminder={(reminder, taskId) => {
@@ -165,6 +167,7 @@ export default function DualDashboard() {
                         userType="caregiver"
                         userTypes={['caregiver', 'older adult']}
                         userName={CAREGIVER_NAME}
+                        olderAdultName={OLDER_ADULT_NAME}
                         mode={rightMode}
                         setMode={setRightMode}
                         onNewReminder={null}

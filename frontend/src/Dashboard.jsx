@@ -85,7 +85,7 @@ function SortableSticky({ task, handleFinish, userType, currentUserType, onStatu
 
         const status = task.status || 'pending';
         const statusConfig = {
-            'pending': { text: 'Pending', color: '#ffc107', bgColor: '#fff3cd' },
+            'pending': { text: 'Pending', color: '#CC9A06', bgColor: '#fff3cd' },
             'accepted': { text: 'Accepted', color: '#198754', bgColor: '#d1e7dd' },
             'rejected': { text: 'Rejected', color: '#dc3545', bgColor: '#f8d7da' },
             'edited': { text: 'Edited', color: '#0d6efd', bgColor: '#cfe2ff' }
@@ -125,29 +125,48 @@ function SortableSticky({ task, handleFinish, userType, currentUserType, onStatu
             <div
                 className="position-absolute"
                 style={{
-                    top: -18,
+                    top: -10,
                     right: -8,
                     zIndex: 10,
                     display: 'flex',
-                    alignItems: 'center',
-                    cursor: 'pointer',
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    gap: 4,
                 }}
             >
                 {shouldShowStatus ? (
                     // Show status for caregiver-created reminders for older adult (only on caregiver screen)
-                    <span className="badge" style={{
-                        fontSize: 10,
-                        padding: '4px 8px',
-                        borderRadius: '12px',
-                        background: getStatusDisplay()?.bgColor || '#fff3cd',
-                        color: getStatusDisplay()?.color || '#ffc107',
-                        fontWeight: 'bold',
-                        border: `1px solid ${getStatusDisplay()?.color || '#ffc107'}`,
-                        minWidth: '60px',
-                        textAlign: 'center'
-                    }}>
-                        {getStatusDisplay()?.text || 'Pending'}
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                        <span className="badge" style={{
+                            fontSize: 10,
+                            padding: '4px 8px',
+                            borderRadius: '12px',
+                            background: getStatusDisplay()?.bgColor || '#fff3cd',
+                            color: getStatusDisplay()?.color || '#ffc107',
+                            fontWeight: 'bold',
+                            border: `1px solid ${getStatusDisplay()?.color || '#ffc107'}`,
+                            minWidth: '60px',
+                            textAlign: 'center'
+                        }}>
+                            {getStatusDisplay()?.text || 'Pending'}
+                        </span>
+                        {task.status === 'rejected' && (
+                            <button
+                                className="btn btn-danger btn-sm"
+                                style={{
+                                    fontWeight: 600,
+                                    fontSize: 10,
+                                    padding: '2px 6px',
+                                    borderRadius: 50,
+                                    cursor: 'pointer',
+                                }}
+                                onClick={handleRemoveRejected}
+                                title="Remove rejected reminder"
+                            >
+                                Remove
+                            </button>
+                        )}
+                    </div>
                 ) : (
                     // Show checkmark for regular tasks
                     <span
@@ -218,28 +237,13 @@ function SortableSticky({ task, handleFinish, userType, currentUserType, onStatu
                     >
                         <span role="img" aria-label="audio">🔊</span> Play Audio
                     </button>
-                    {shouldShowStatus && task.status === 'rejected' && (
-                        <button
-                            className="btn btn-danger btn-sm"
-                            style={{
-                                fontWeight: 600,
-                                fontSize: 10,
-                                padding: '2px 6px',
-                                borderRadius: 50,
-                            }}
-                            onClick={handleRemoveRejected}
-                            title="Remove rejected reminder"
-                        >
-                            Remove
-                        </button>
-                    )}
                 </div>
             </div>
         </div>
     );
 }
 
-export default function Dashboard({ userTypes, userType, userName, onAdd, onArchive, onNewReminder }) {
+export default function Dashboard({ userTypes, userType, userName, olderAdultName, onAdd, onArchive, onNewReminder }) {
     const {
         tasks,
         loading,
@@ -341,11 +345,11 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                             {now.toLocaleDateString(undefined, { weekday: 'long' })}
                         </span>
                         <span style={{ fontSize: 24, fontWeight: 400 }}>
-                            {now.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
+                            {now.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>
                     </div>
                 </div>
-                <div className="mt-3" style={{ fontSize: 32, fontWeight: 600, lineHeight: 1.3 }}>
+                <div style={{ fontSize: 32, fontWeight: 600, lineHeight: 1.5, marginTop: '6px' }}>
                     {userType === 'caregiver' ? (
                         (() => {
                             const hour = now.getHours();
@@ -357,20 +361,19 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                         `Well done, ${userName}!`
                     )}
                 </div>
-                <div className="mt-2 mb-2" style={{ fontSize: 20, fontWeight: 500, lineHeight: userType === 'caregiver' ? 0.5 : 0 }}>
+                <div className="mt-2 mb-2" style={{ fontSize: 20, fontWeight: 500, lineHeight: 0 }}>
                     {userType === 'caregiver' ? (
                         <div>
                             <div>
+                                <span style={{ color: '#222' }}> My tasks: </span>
                                 <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{caregiverOwnCompleted}</span>
                                 <span style={{ color: '#222' }}> out of </span>
                                 <span style={{ color: '#1E9300', fontWeight: 700 }}>{caregiverOwnTotal}</span>
-                                <span style={{ color: '#222' }}> of my tasks completed!</span>
-                            </div>
-                            <div style={{ marginTop: '8px' }}>
+                                <span style={{ color: '#222' }}> • </span>
+                                <span style={{ color: '#222' }}> {olderAdultName || 'Older Adult'}'s tasks: </span>
                                 <span style={{ color: '#1E9300', fontWeight: 700, fontSize: 30 }}>{caregiverOlderAdultCompleted}</span>
                                 <span style={{ color: '#222' }}> out of </span>
                                 <span style={{ color: '#1E9300', fontWeight: 700 }}>{caregiverOlderAdultTotal}</span>
-                                <span style={{ color: '#222' }}> of Angela's tasks completed!</span>
                             </div>
                         </div>
                     ) : (
@@ -434,7 +437,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                     className="sticky-scroll"
                     style={{
                         width: 490,
-                        paddingTop: 24,
+                        paddingTop: 15,
                         maxHeight: 460,
                         overflowY: 'auto',
                         overflowX: 'hidden',
@@ -472,7 +475,7 @@ export default function Dashboard({ userTypes, userType, userName, onAdd, onArch
                     </DndContext>
                 </div>
             </div>
-            <div style={{ position: 'absolute', bottom: -3, right: 20, zIndex: 1000 }}>
+            <div style={{ position: 'absolute', bottom: -8, right: 20, zIndex: 1000 }}>
                 <button className="btn btn-warning fw-bold shadow" onClick={onAdd}>
                     + Add New Stickies
                 </button>
